@@ -3,8 +3,8 @@ specifying the number of clusters to generate.  Instead, the gap
 statistic method is used to estimate the optimal number of clusters for
 the data set."""
 
-# Author: John Maloney <jmmaloney3@gmail.com>
-# License: ???
+# Author: John Maloney
+# License: BSD-3-Clause
 
 import math
 import numpy as np
