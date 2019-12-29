@@ -225,7 +225,7 @@ class GapStatClustering(BaseEstimator, ClusterMixin, TransformerMixin):
         AttributeError
             If the base_clusterer does not implement transform().
         """
-        check_is_fitted(self, 'labels_')
+        check_is_fitted(self)
 
         # call transform on the base clusterer
         return self.base_clusterer.transform(X)
@@ -251,7 +251,7 @@ class GapStatClustering(BaseEstimator, ClusterMixin, TransformerMixin):
         AttributeError
             If the base_clusterer does not implement predict().
         """
-        check_is_fitted(self, 'labels_')
+        check_is_fitted(self)
 
         # call predict on the base clusterer
         return self.base_clusterer.predict(X)
