@@ -18,6 +18,7 @@ from sklearn.cluster import FeatureAgglomeration
 from sklearn.cluster import MiniBatchKMeans
 from sklearn.cluster import MeanShift
 from sklearn.cluster import SpectralClustering
+from sklearn.cluster import OPTICS
 
 import gapstat
 
@@ -224,7 +225,7 @@ def test_gstat_meanshift():
     """Test the GapStatClustering using MeanShift as the
     base clusterer.
     """
-    # dbscan is incompatble with GapStatClustering
+    # meanshift is incompatble with GapStatClustering
     # because it doesn't allow number of clusters to be specified
     with pytest.raises(AttributeError):
         gapstat.GapStatClustering(base_clusterer=MeanShift())
@@ -242,6 +243,16 @@ def test_gstat_spectralclustering():
 
     # test transform and fit_transform()
     _run_transform_test(base_clusterer=SpectralClustering())
+
+
+def test_gstat_optics():
+    """Test the GapStatClustering using OPTICS as the
+    base clusterer.
+    """
+    # OPTICS is incompatble with GapStatClustering
+    # because it doesn't allow number of clusters to be specified
+    with pytest.raises(AttributeError):
+        gapstat.GapStatClustering(base_clusterer=OPTICS())
 
 
 def test_input_validation():
