@@ -306,30 +306,25 @@ def gapstat(X, clusterer=None, max_k=10, B1=10, B2=1, calcStats=False):
         label[i] is the index of the cluster for the i-th observation.  The
         clustering includes n_clusters clusters.
 
-    W : float array, shape = [max_k], optional
-        The mean pooled within-cluter sum of squares around the cluster means
-        for the input data set for each value of k considered.  The value
-        returned for each value of k is the mean of B clusterings.  This is
-        only returned when calcStats is True.
+    stats : dict, optional
+        When calcStats is true, the statistics are returned in a dictionary
+        with three entries: data, index and columns.  The data entry is a numpy
+        two-dimensional array that includes the statistics described below.
+        The index and columns entries provide additional information that can
+        be used to create a pandas dataframe containing the statistics.  Each
+        row of the data matrix provides the following statistics for each value
+        of k considered:
 
-    log_W : float array, shape = [max_k], optional
-        log(W).  This is only returned when calcStats is True.
-
-    log_W_star : float array, shape = [max_k], optional
-        The expectation of log(W) under an appropriate null reference
-        distribution of the data.  For each value of k considered, this is
-        calculated as the mean log pooled within-cluter sum of squares around
-        the cluster means for B generated null reference data sets.  This is
-        only returned when calcStats is True.
-
-    gap : float array, shape = [max_k], optional
-        The gap statistic for each value of k considered.  For each value of
-        k, this is calculated as log(W*) - log(W).  This is returned only
-        when calcStats is True.
-
-    s : float array, shape = [max_k], optional
-        The standard error of log(W*) for each value of k considered.  This
-        is only returned when calcStats is True.
+        W : The mean pooled within-cluter sum of squares around the cluster
+            means for the input data set.  The value returned for each value of
+            k is the mean of B2 clusterings.
+        log(W) : the logarithm of W (see above)
+        log(W*) : The expectation of log(W) under an appropriate null reference
+                  distribution of the data.  This is calculated as the mean log
+                  pooled within-cluter sum of squares around the cluster means
+                  for B2 generated null reference data sets.
+        Gap : The gap statistic calculated as log(W*) - log(W).
+        Std Err : The standard error of log(W*).
 
     Examples
     --------
@@ -443,7 +438,15 @@ def gapstat(X, clusterer=None, max_k=10, B1=10, B2=1, calcStats=False):
 
     # return the results
     if (calcStats):
-        return k_hat, k_hat_labels, W, log_W, log_W_star, gap, s
+        stats = {}
+        # create array of k values (index)
+        stats["index"] = np.arange(1,max_k+2)
+        # create an array of column headers (columns)
+        stats["columns"] = np.array(["W", "log(W)", "log(W*)", "Gap", "Std Err"])
+        # create a multi-dimensional array with the statistics (data)
+        stats["data"] = np.stack((W, log_W, log_W_star, gap, s), axis=1)
+
+        return k_hat, k_hat_labels, stats
     else:
         return k_hat, k_hat_labels
 
